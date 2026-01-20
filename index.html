@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptGarden | Fast UI</title>
+    <meta name="description" content="Organize, store, and grow your AI image prompts in a beautiful garden-themed library. Features versioning, tagging, and one-click copying.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://app.aimaverick.me/">
+    <meta property="og:title" content="PromptGarden | AI Image Prompt Library">
+    <meta property="og:description" content="Organize, store, and grow your AI image prompts in a beautiful garden-themed library.">
+    <meta property="og:image" content="pg_og.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://app.aimaverick.me/">
+    <meta property="twitter:title" content="PromptGarden | AI Image Prompt Library">
+    <meta property="twitter:description" content="Organize, store, and grow your AI image prompts in a beautiful garden-themed library.">
+    <meta property="twitter:image" content="pg_og.png">
+    
+    <!-- Tailwind CSS with Dark Mode Configuration -->
+    <script src="cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: 'rgb(var(--primary-50) / <alpha-value>)',
+                            100: 'rgb(var(--primary-100) / <alpha-value>)',
+                            200: 'rgb(var(--primary-200) / <alpha-value>)',
+                            300: 'rgb(var(--primary-300) / <alpha-value>)',
+                            400: 'rgb(var(--primary-400) / <alpha-value>)',
+                            500: 'rgb(var(--primary-500) / <alpha-value>)',
+                            600: 'rgb(var(--primary-600) / <alpha-value>)',
+                            700: 'rgb(var(--primary-700) / <alpha-value>)',
+                            800: 'rgb(var(--primary-800) / <alpha-value>)',
+                            900: 'rgb(var(--primary-900) / <alpha-value>)',
+                            950: 'rgb(var(--primary-950) / <alpha-value>)',
+                        },
+                        teal: {
+                            50: 'rgb(var(--secondary-50) / <alpha-value>)',
+                            100: 'rgb(var(--secondary-100) / <alpha-value>)',
+                            400: 'rgb(var(--secondary-400) / <alpha-value>)',
+                            500: 'rgb(var(--secondary-500) / <alpha-value>)',
+                            600: 'rgb(var(--secondary-600) / <alpha-value>)',
+                            900: 'rgb(var(--secondary-900) / <alpha-value>)',
+                        },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.2s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(-5px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables for Seasons */
+        :root {
+            /* SPRING (Default - Emerald/Teal) */
+            --primary-50: 236 253 245;
+            --primary-100: 209 250 229;
+            --primary-200: 167 243 208;
+            --primary-300: 110 231 183;
+            --primary-400: 52 211 153;
+            --primary-500: 16 185 129;
+            --primary-600: 5 150 105;
+            --primary-700: 4 120 87;
+            --primary-800: 6 95 70;
+            --primary-900: 6 78 59;
+            --primary-950: 2 44 34;
+            
+            --secondary-50: 240 253 250;
+            --secondary-100: 204 251 241;
+            --secondary-400: 45 212 191;
+            --secondary-500: 20 184 166;
+            --secondary-600: 13 148 136;
+            --secondary-900: 19 78 74;
+        }
+
+        /* AUTUMN (Amber/Orange/Red) */
+        [data-season="autumn"] {
+            --primary-50: 255 251 235;
+            --primary-100: 254 243 199;
+            --primary-200: 253 230 138;
+            --primary-300: 252 211 77;
+            --primary-400: 251 191 36;
+            --primary-500: 245 158 11;
+            --primary-600: 217 119 6;
+            --primary-700: 180 83 9;
+            --primary-800: 146 64 14;
+            --primary-900: 120 53 15;
+            --primary-950: 69 26 3;
+
+            --secondary-50: 254 242 242;
+            --secondary-100: 254 226 226;
+            --secondary-400: 248 113 113;
+            --secondary-500: 239 68 68;
+            --secondary-600: 220 38 38;
+            --secondary-900: 127 29 29;
+        }
+
+        /* WINTER (Sky/Blue) */
+        [data-season="winter"] {
+            --primary-50: 240 249 255;
+            --primary-100: 224 242 254;
+            --primary-200: 186 230 253;
+            --primary-300: 125 211 252;
+            --primary-400: 56 189 248;
+            --primary-500: 14 165 233;
+            --primary-600: 2 132 199;
+            --primary-700: 3 105 161;
+            --primary-800: 7 89 133;
+            --primary-900: 12 74 110;
+            --primary-950: 8 47 73;
+
+            --secondary-50: 239 246 255;
+            --secondary-100: 219 234 254;
+            --secondary-400: 96 165 250;
+            --secondary-500: 59 130 246;
+            --secondary-600: 37 99 235;
+            --secondary-900: 30 58 138;
+        }
+
+        body { 
+            /* Light Mode Default */
+            background-color: rgb(var(--primary-50));
+            color: #1e293b; /* Slate-800 for high contrast text */
+            /* Static gradient overlay for Light Mode */
+            background-image: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.8), transparent 70%);
+            background-attachment: fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        html.dark body {
+            /* Dark Mode */
+            background-color: rgb(var(--primary-950));
+            color: rgb(248, 250, 252);
+            /* Static gradient overlay for Dark Mode */
+            background-image: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.08), transparent 70%);
+        }
+
+        /* --- Performance Optimized UI Core Styles (NO BLUR FILTERS) --- */
+
+        /* Noise Overlay - kept low opacity */
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Glass Header */
+        .glass {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        html.dark .glass {
+            background: linear-gradient(180deg, rgba(var(--primary-950) / 0.95) 0%, rgba(var(--primary-950) / 0.85) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+        html.dark .glass-card {
+            background: linear-gradient(145deg, rgba(var(--primary-900) / 0.6) 0%, rgba(var(--primary-950) / 0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(var(--primary-500) / 0.3);
+            box-shadow: 0 15px 40px -10px rgba(var(--primary-500) / 0.15), 
+                        0 0 20px rgba(var(--primary-400) / 0.05) inset; 
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+        }
+        html.dark .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(145deg, rgba(var(--primary-900) / 0.7) 0%, rgba(var(--primary-950) / 0.5) 100%);
+        }
+
+        /* Glass Input */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
+            color: #1a202c; /* Slate-900 for Light Mode readability */
+            font-weight: 500;
+        }
+        html.dark .glass-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            color: #f8fafc;
+            font-weight: 400;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(var(--primary-500) / 0.8);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03), 0 0 0 2px rgba(var(--primary-500) / 0.2);
+            color: #0f172a; /* Force dark text on focus */
+        }
+        html.dark .glass-input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(var(--primary-400) / 0.6);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(var(--primary-500) / 0.2);
+            color: #ffffff;
+        }
+        
+        .glass-input::placeholder { color: #64748b; opacity: 0.8; }
+        html.dark .glass-input::placeholder { color: #94a3b8; opacity: 1; }
+
+        /* Liquid Button - Modified for Light Mode Visibility */
+        .btn-liquid {
+            position: relative;
+            overflow: hidden;
+            /* Default Dark Mode Gradient */
+            background: linear-gradient(135deg, rgb(var(--primary-600)) 0%, rgb(var(--teal-600)) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(var(--primary-500) / 0.4);
+            z-index: 1;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            /* Dark Mode Text */
+            color: #ffffff;
+        }
+
+        /* Light Mode Override for Button - High Contrast */
+        html:not(.dark) .btn-liquid {
+            background: white; /* Clean white background */
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: rgb(var(--primary-700)); /* Dark Green Text */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-shadow: none;
+        }
+        html:not(.dark) .btn-liquid::before {
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+        }
+        html:not(.dark) .btn-liquid:hover {
+            border-color: rgb(var(--primary-500));
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            background: rgb(var(--primary-50));
+        }
+
+        .btn-liquid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+
+        .btn-liquid:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(var(--primary-500) / 0.5);
+        }
+
+        .btn-liquid:hover::before {
+            left: 100%;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, rgb(var(--primary-700)), rgb(var(--secondary-700)), rgb(var(--primary-500)));
+        }
+        html.dark .text-gradient {
+            background-image: linear-gradient(to right, rgb(var(--primary-400)), rgb(var(--secondary-400)), rgb(var(--primary-200)));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); 
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2); 
+            border-radius: 4px;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3); 
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25); 
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: translate(-50%, 20px) scale(0.95);
+            background: rgba(var(--primary-700) / 0.98) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        html.dark #toast {
+            background: rgba(var(--primary-900) / 0.95) !important; 
+            border: 1px solid rgba(var(--primary-400) / 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Focus Mode Styles */
+        #modalContent.focus-mode {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            max-height: none;
+            border-radius: 0;
+            z-index: 60;
+            background-color: rgb(var(--primary-50));
+        }
+        html.dark #modalContent.focus-mode {
+            background-color: rgb(var(--primary-950));
+        }
+        
+        .focus-hidden {
+            transition: opacity 0.3s ease;
+        }
+        
+        #modalContent.focus-mode .focus-hidden {
+            display: none;
+        }
+        
+        #modalContent.focus-mode #promptInput {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            padding: 2rem;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: #1a202c; /* Ensure dark text in light focus mode */
+        }
+        html.dark #modalContent.focus-mode #promptInput {
+            color: #f8fafc;
+        }
+    </style>
+    
+    <!-- Initial Theme & Season Check -->
+    <script>
+        // Check Theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Check Season (Remove Zen fallback)
+        let savedSeason = localStorage.getItem('season') || 'spring';
+        if (savedSeason === 'zen') savedSeason = 'spring'; // Fallback if zen was saved
+        document.documentElement.setAttribute('data-season', savedSeason);
+    </script>
+</head>
+<body class="text-slate-900 dark:text-slate-50 min-h-screen flex flex-col relative overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+
+    <!-- Noise Texture Overlay -->
+    <div class="bg-noise"></div>
+
+    <!-- Header -->
+    <header class="glass sticky top-0 z-40 transition-colors duration-500 ease-in-out">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="pg.png" onerror="this.src='https://placehold.co/68x68/10b981/ffffff?text=PG'" alt="PromptGarden Logo" class="w-[60px] h-[60px] rounded-2xl shadow-lg object-cover ring-1 ring-black/5 dark:ring-white/20 transform hover:scale-105 transition-transform duration-300">
+                <h1 class="text-2xl font-bold tracking-tight drop-shadow-sm dark:drop-shadow-lg text-slate-900 dark:text-white">Prompt<span class="text-gradient">Garden</span></h1>
+            </div>
+
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Search (Desktop) -->
+                <div class="relative hidden md:block group">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-emerald-400/70 group-focus-within:text-emerald-600 dark:group-focus-within:text-emerald-500 transition-colors"></i>
+                    <input type="text" id="searchInput" placeholder="Search your garden..." 
+                        class="glass-input text-sm rounded-xl block w-64 pl-10 p-2.5 transition-all outline-none">
+                </div>
+                
+                <!-- New Prompt Button -->
+                <button onclick="openModal()" class="hidden sm:flex btn-liquid text-white font-semibold rounded-xl text-sm px-6 py-2.5 items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> <span>Plant New</span>
+                </button>
+                
+                <!-- Mobile New Button -->
+                <button onclick="openModal()" class="sm:hidden w-10 h-10 rounded-xl btn-liquid text-white flex items-center justify-center">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-indigo-300 transition-colors flex items-center justify-center border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-md" title="Toggle Theme">
+                    <i class="fa-solid fa-moon hidden dark:block text-indigo-300"></i>
+                    <!-- Custom SVG Sun Icon for Light Mode -->
+                    <svg class="w-6 h-6 text-amber-500 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+
+                <!-- Settings Dropdown -->
+                <div class="relative">
+                    <button id="settingsBtn" onclick="toggleSettings()" class="w-10 h-10 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors flex items-center justify-center border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-md">
+                        <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+                    </button>
+                    <!-- Dropdown -->
+                    <div id="settingsMenu" class="absolute right-0 mt-2 w-48 bg-white dark:bg-emerald-950 border border-black/5 dark:border-white/10 rounded-xl shadow-2xl py-2 hidden z-50 animate-fade-in origin-top-right ring-1 ring-black/5">
+                        <div class="px-4 py-2 border-b border-gray-100 dark:border-white/5 mb-1">
+                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Season</span>
+                        </div>
+                        <!-- Hardcoded Hex Colors for Menu Items to prevent theme overriding -->
+                        <button onclick="setSeason('spring')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-emerald-500/20 transition-colors flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> Spring
+                        </button>
+                        <button onclick="setSeason('autumn')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-amber-500/20 transition-colors flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span> Autumn
+                        </button>
+                        <button onclick="setSeason('winter')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-sky-500/20 transition-colors flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#0ea5e9] shadow-[0_0_8px_rgba(14,165,233,0.8)]"></span> Winter
+                        </button>
+
+                        <div class="px-4 py-2 border-b border-t border-gray-100 dark:border-white/5 my-1">
+                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Data</span>
+                        </div>
+                        <div class="flex gap-1 px-2 mb-1">
+                            <button onclick="exportData('json')" class="flex-1 text-left px-2 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg transition-colors border border-gray-100 dark:border-white/5 text-center font-medium">
+                                JSON
+                            </button>
+                            <button onclick="exportData('csv')" class="flex-1 text-left px-2 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg transition-colors border border-gray-100 dark:border-white/5 text-center font-medium">
+                                Excel
+                            </button>
+                        </div>
+                        <button onclick="document.getElementById('fileInput').click()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                            <i class="fa-solid fa-upload mr-2 w-4"></i> Import File
+                        </button>
+                        <input type="file" id="fileInput" class="hidden" accept=".json,.csv" onchange="importData(this)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full z-10 pb-16">
+        
+        <!-- Stats Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-end sm:items-center mb-6 gap-4">
+            <div>
+                <h2 class="text-3xl font-bold mb-1 tracking-tight text-slate-800 dark:text-white drop-shadow-sm dark:drop-shadow-md">Your Garden</h2>
+                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 font-medium">
+                    <span class="bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-md font-mono text-xs shadow-sm dark:shadow-[0_0_10px_rgba(16,185,129,0.2)]" id="promptCount">0</span>
+                    <span class="text-gray-600 dark:text-gray-400">Seeds Planted</span>
+                </div>
+            </div>
+            
+            <!-- Mobile Search -->
+            <div class="w-full sm:hidden">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                    <input type="text" id="mobileSearchInput" placeholder="Search prompts..." 
+                        class="glass-input text-sm rounded-xl block w-full pl-10 p-3 text-gray-900 dark:text-white placeholder-gray-500 transition-all outline-none">
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex flex-nowrap gap-2 overflow-x-auto pb-4 mb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0" id="categoryFilters"></div>
+
+        <!-- Grid -->
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-center animate-fade-in glass-card rounded-3xl mx-auto max-w-lg mt-10">
+            <div class="bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-500/20 dark:to-teal-500/20 p-8 rounded-full mb-6 shadow-md dark:shadow-[0_0_30px_rgba(16,185,129,0.1)] border border-emerald-200 dark:border-emerald-500/30">
+                <i class="fa-solid fa-seedling text-5xl text-emerald-600 dark:text-emerald-400 drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Garden is empty</h3>
+            <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8 px-4">Start planting your ideas to watch them grow into beautiful creations.</p>
+            <button onclick="openModal()" class="btn-liquid text-white font-semibold rounded-xl px-8 py-3">
+                Plant First Seed
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="fixed bottom-0 left-0 right-0 z-50 border-t border-black/5 dark:border-white/5 bg-white/90 dark:bg-emerald-950/95 py-2 shadow-lg backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center text-[10px] sm:text-xs text-gray-500 dark:text-slate-400 font-medium">
+            <p>&copy; 2026 <a href="https://app.aimaverick.me" target="_blank" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors">@amsubhzd</a></p>
+            <p class="opacity-70">Designed by AIMaverick</p>
+        </div>
+    </footer>
+
+    <!-- Add/Edit Modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 transition-opacity opacity-0">
+        <div class="absolute inset-0 bg-black/30 dark:bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="glass-card bg-white dark:bg-emerald-900 rounded-3xl shadow-2xl w-full max-w-3xl h-[85vh] max-h-[800px] transform transition-all scale-95 relative z-10 flex flex-col transition-all duration-300 border-white/40 dark:border-white/10" id="modalContent">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-black/5 dark:border-white/10 shrink-0">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white drop-shadow-sm" id="modalTitle">Plant New Prompt</h3>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="toggleFocusMode()" class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-white transition-colors flex items-center justify-center border border-black/5 dark:border-white/5" title="Toggle Focus Mode">
+                        <i class="fa-solid fa-expand" id="focusIcon"></i>
+                    </button>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-red-500/10 dark:hover:bg-red-500/20 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center justify-center border border-black/5 dark:border-white/5">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <form id="promptForm" onsubmit="savePrompt(event)" class="flex flex-col flex-grow p-6 gap-5 overflow-hidden">
+                <input type="hidden" id="promptId">
+                <div class="flex flex-col sm:flex-row gap-4 shrink-0 focus-hidden">
+                    <div class="flex-grow">
+                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Title</label>
+                        <input type="text" id="titleInput" required placeholder="e.g. Secret Garden" 
+                            class="glass-input w-full rounded-xl p-3 focus:outline-none transition-all placeholder-gray-500 text-sm font-semibold">
+                    </div>
+                    <div class="min-w-[150px]">
+                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Status</label>
+                        <div class="flex glass-input rounded-xl p-1 h-[46px]">
+                            <button type="button" onclick="setModalStatus('WIP')" id="btnWIP" class="flex-1 rounded-lg text-xs font-bold transition-all text-amber-600 bg-white/50 dark:bg-white/10 shadow-sm border border-amber-500/30">WIP</button>
+                            <button type="button" onclick="setModalStatus('Final')" id="btnFinal" class="flex-1 rounded-lg text-xs font-bold transition-all text-gray-500 dark:text-gray-500 hover:text-emerald-700 dark:hover:text-emerald-400">Final</button>
+                        </div>
+                        <input type="hidden" id="statusInput" value="WIP">
+                    </div>
+                    <div class="sm:w-1/3 min-w-[200px]">
+                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Category</label>
+                        <div class="relative h-[46px]">
+                            <select id="categorySelect" onchange="handleCategoryChange(this)" 
+                                class="glass-input w-full h-full rounded-xl px-3 text-sm focus:outline-none appearance-none cursor-pointer"></select>
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                            <div id="customCategoryContainer" class="hidden absolute inset-0 flex gap-1">
+                                <input type="text" id="customCategoryInput" placeholder="New Category..." 
+                                    class="glass-input flex-grow rounded-xl px-3 text-sm focus:outline-none">
+                                <button type="button" onclick="cancelCustomCategory()" class="px-2 text-gray-500 hover:text-red-500 transition-colors">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-grow flex flex-col min-h-0 relative">
+                    <div class="flex justify-between items-end mb-1 focus-hidden">
+                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 uppercase tracking-wider">Prompt</label>
+                        <button type="button" id="historyBtn" onclick="toggleHistory()" class="text-[10px] font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 hidden transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-clock-rotate-left"></i> History
+                        </button>
+                    </div>
+                    <div id="historyPanel" class="hidden absolute top-7 left-0 right-0 z-20 bg-white/95 dark:bg-emerald-950/95 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto space-y-2"></div>
+                    <textarea id="promptInput" required placeholder="Enter your detailed image generation prompt here..." 
+                        class="glass-input flex-grow w-full rounded-xl p-4 mono text-sm focus:outline-none transition-all resize-none leading-relaxed text-slate-900 dark:text-slate-100 placeholder-gray-500"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0 focus-hidden">
+                    <div>
+                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Tags</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-hashtag absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-600/50 text-xs"></i>
+                            <input type="text" id="tagsInput" placeholder="nature, 8k..." 
+                                class="glass-input w-full rounded-xl pl-8 p-3 text-sm focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">GPT Link <span class="text-[9px] font-normal lowercase opacity-70 ml-1 text-gray-500">(opt)</span></label>
+                        <div class="relative">
+                            <i class="fa-solid fa-link absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-600/50 text-xs"></i>
+                            <input type="url" id="gptLinkInput" placeholder="https://..." 
+                                class="glass-input w-full rounded-xl pl-8 p-3 text-sm focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-black/5 dark:border-white/5 shrink-0 focus-hidden">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/5 dark:hover:border-white/5">Cancel</button>
+                    <button type="submit" class="btn-liquid text-white px-8 py-2.5 rounded-xl text-sm font-semibold shadow-lg">Save Seed</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/30 dark:bg-black/80" onclick="closeDeleteModal()"></div>
+        <div class="glass-card bg-white dark:bg-emerald-900 rounded-3xl border border-white/40 dark:border-white/10 p-8 max-w-sm w-full text-center relative z-10 shadow-2xl">
+            <div class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-500/10 text-red-500 border border-red-200 dark:border-red-500/20 flex items-center justify-center mx-auto mb-4 shadow-sm dark:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+                <i class="fa-solid fa-trash-can text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Uproot Prompt?</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6 leading-relaxed">Are you sure you want to remove this from your garden? This action cannot be undone.</p>
+            <div class="flex justify-center gap-3">
+                <button onclick="closeDeleteModal()" class="px-6 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent">Cancel</button>
+                <button id="confirmDeleteBtn" class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/30 transition-all transform hover:-translate-y-0.5">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-10 left-1/2 z-50 flex items-center gap-3 px-6 py-3 rounded-full text-white font-medium text-sm">
+        <i class="fa-solid fa-check-circle"></i> <span>Copied to Clipboard!</span>
+    </div>
+
+    <script>
+        // State
+        let prompts = [];
+        let deleteTargetId = null;
+        let activeCategory = 'All';
+        let currentHistory = []; 
+        let isFocusMode = false;
+
+        const DEFAULT_CATEGORIES = [
+            { id: 'App', icon: 'fa-mobile-screen' },
+            { id: 'Video', icon: 'fa-film' },
+            { id: 'Song', icon: 'fa-music' },
+            { id: 'Image', icon: 'fa-image' },
+            { id: 'Icon', icon: 'fa-icons' }
+        ];
+
+        const MAGIC_KEYWORDS = {
+            '8k': '8k',
+            'cinematic': 'cinematic',
+            'unreal engine': 'unreal engine',
+            'octane': 'octane render',
+            'portrait': 'portrait',
+            'landscape': 'landscape',
+            'macro': 'macro',
+            'cyberpunk': 'cyberpunk',
+            'anime': 'anime',
+            'photo': 'photography',
+            'realistic': 'realistic',
+            'v 6.0': 'v6',
+            '--ar': 'aspect-ratio'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPrompts();
+            renderCategoryFilters();
+            renderPrompts();
+            
+            // Search listeners
+            document.getElementById('searchInput').addEventListener('input', (e) => filterPrompts(e.target.value));
+            document.getElementById('mobileSearchInput').addEventListener('input', (e) => filterPrompts(e.target.value));
+
+            // Magic Tagging Listener
+            document.getElementById('promptInput').addEventListener('paste', handleMagicTags);
+        });
+
+        // --- Theme Logic ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function setSeason(season) {
+            document.documentElement.setAttribute('data-season', season);
+            localStorage.setItem('season', season);
+            renderCategoryFilters();
+            renderPrompts();
+        }
+        
+        function toggleSettings() {
+            const menu = document.getElementById('settingsMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- Magic Tagging ---
+        function handleMagicTags(e) {
+            setTimeout(() => {
+                const text = e.target.value.toLowerCase();
+                const tagsInput = document.getElementById('tagsInput');
+                let currentTags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
+                let newTagsFound = false;
+
+                for (const [key, tag] of Object.entries(MAGIC_KEYWORDS)) {
+                    if (text.includes(key) && !currentTags.includes(tag)) {
+                        currentTags.push(tag);
+                        newTagsFound = true;
+                    }
+                }
+
+                if (newTagsFound) {
+                    tagsInput.value = currentTags.join(', ');
+                    showToast("Magic tags applied!", false);
+                }
+            }, 100);
+        }
+
+        // --- Focus Mode ---
+        function toggleFocusMode() {
+            const modalContent = document.getElementById('modalContent');
+            const icon = document.getElementById('focusIcon');
+            
+            isFocusMode = !isFocusMode;
+            
+            if (isFocusMode) {
+                modalContent.classList.add('focus-mode');
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+            } else {
+                modalContent.classList.remove('focus-mode');
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+            }
+        }
+
+        // --- Core Functions ---
+
+        function loadPrompts() {
+            const stored = localStorage.getItem('promptVault_data'); 
+            if (stored) {
+                try {
+                    prompts = JSON.parse(stored);
+                    prompts = prompts.map(p => ({
+                        ...p,
+                        status: p.status || 'WIP',
+                        history: p.history || [] 
+                    }));
+                    prompts.sort((a, b) => b.createdAt - a.createdAt);
+                } catch (e) {
+                    console.error("Failed to parse data", e);
+                    prompts = [];
+                }
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('promptVault_data', JSON.stringify(prompts));
+            updateStats();
+            renderCategoryFilters();
+        }
+
+        function updateStats() {
+            document.getElementById('promptCount').textContent = prompts.length;
+        }
+
+        // --- Categories Logic ---
+
+        function getUniqueCategories() {
+            const cats = new Set(DEFAULT_CATEGORIES.map(c => c.id));
+            prompts.forEach(p => {
+                if (p.category) cats.add(p.category);
+            });
+            return Array.from(cats).sort();
+        }
+
+        function renderCategoryFilters() {
+            const container = document.getElementById('categoryFilters');
+            const uniqueCats = getUniqueCategories();
+
+            const allBtn = `
+                <button onclick="setFilterCategory('All')" 
+                    class="px-5 py-2 rounded-xl text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 border ${activeCategory === 'All' ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-white/50 dark:bg-white/5 text-gray-500 dark:text-gray-400 border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/10 hover:text-emerald-700 dark:hover:text-white'}">
+                    <i class="fa-solid fa-layer-group"></i> All
+                </button>
+            `;
+
+            const catBtns = uniqueCats.map(catId => {
+                const def = DEFAULT_CATEGORIES.find(d => d.id === catId);
+                const iconClass = def ? def.icon : 'fa-tag';
+                
+                return `
+                <button onclick="setFilterCategory('${catId}')" 
+                    class="px-5 py-2 rounded-xl text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 border ${activeCategory === catId ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-white/50 dark:bg-white/5 text-gray-500 dark:text-gray-400 border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/10 hover:text-emerald-700 dark:hover:text-white'}">
+                    <i class="fa-solid ${iconClass}"></i> ${catId}
+                </button>
+            `}).join('');
+
+            container.innerHTML = allBtn + catBtns;
+        }
+
+        function setFilterCategory(cat) {
+            activeCategory = cat;
+            renderCategoryFilters();
+            
+            const query = document.getElementById('searchInput').value || document.getElementById('mobileSearchInput').value;
+            filterPrompts(query);
+        }
+
+        // --- Modal Category Logic ---
+        
+        function populateModalCategorySelect(selectedCategory = 'Image') {
+            const select = document.getElementById('categorySelect');
+            const uniqueCats = getUniqueCategories();
+            
+            document.getElementById('customCategoryContainer').classList.add('hidden');
+            select.classList.remove('hidden');
+            
+            let html = uniqueCats.map(c => `<option value="${c}" class="bg-white dark:bg-emerald-950 text-gray-900 dark:text-white">${c}</option>`).join('');
+            html += `<option value="__NEW__" class="font-bold text-emerald-600 dark:text-emerald-400 bg-white dark:bg-emerald-950">+ Create New...</option>`;
+            
+            select.innerHTML = html;
+            
+            if (uniqueCats.includes(selectedCategory)) {
+                select.value = selectedCategory;
+            } else if (selectedCategory) {
+                 select.value = 'Image';
+            }
+        }
+
+        function handleCategoryChange(select) {
+            if (select.value === '__NEW__') {
+                document.getElementById('customCategoryContainer').classList.remove('hidden');
+                document.getElementById('categorySelect').classList.add('hidden');
+                document.getElementById('customCategoryInput').value = '';
+                document.getElementById('customCategoryInput').focus();
+            }
+        }
+
+        function cancelCustomCategory() {
+            document.getElementById('customCategoryContainer').classList.add('hidden');
+            document.getElementById('categorySelect').classList.remove('hidden');
+            document.getElementById('categorySelect').value = 'Image';
+        }
+
+        // --- Status Logic ---
+        function setModalStatus(status) {
+            document.getElementById('statusInput').value = status;
+            const btnWIP = document.getElementById('btnWIP');
+            const btnFinal = document.getElementById('btnFinal');
+            
+            if (status === 'WIP') {
+                btnWIP.className = "flex-1 rounded-lg text-xs font-bold transition-all text-amber-600 bg-black/5 dark:bg-white/10 shadow-sm border border-amber-500/30";
+                btnFinal.className = "flex-1 rounded-lg text-xs font-bold transition-all text-gray-500 dark:text-gray-500 hover:text-emerald-700 dark:hover:text-emerald-400";
+            } else {
+                btnWIP.className = "flex-1 rounded-lg text-xs font-bold transition-all text-gray-500 dark:text-gray-500 hover:text-amber-500";
+                btnFinal.className = "flex-1 rounded-lg text-xs font-bold transition-all text-emerald-600 dark:text-emerald-400 bg-black/5 dark:bg-white/10 shadow-sm border border-emerald-500/30";
+            }
+        }
+
+        // --- History Logic ---
+        function toggleHistory() {
+            const panel = document.getElementById('historyPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        function renderHistory(history) {
+            const panel = document.getElementById('historyPanel');
+            currentHistory = history; 
+
+            if (!history || history.length === 0) {
+                panel.innerHTML = '<div class="text-gray-400 dark:text-gray-500 italic text-center py-2 text-[10px]">No previous versions found</div>';
+                return;
+            }
+
+            panel.innerHTML = history.map((h, i) => `
+                <div class="flex justify-between items-start p-3 bg-white/50 dark:bg-white/5 rounded-lg border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                    <div class="mr-2 text-gray-600 dark:text-gray-300 w-3/4">
+                        <span class="text-[9px] text-gray-400 dark:text-gray-500 block mb-0.5 font-mono">${new Date(h.timestamp).toLocaleString()}</span>
+                        <div class="text-[10px] leading-snug line-clamp-2 text-gray-500 dark:text-gray-400">${escapeHtml(h.text)}</div>
+                    </div>
+                    <button type="button" onclick="restoreHistory(${i})" class="text-[9px] font-bold bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-500/20 transition-colors shrink-0">
+                        Restore
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function restoreHistory(index) {
+            if (currentHistory[index]) {
+                const item = currentHistory[index];
+                document.getElementById('promptInput').value = item.text;
+                toggleHistory(); 
+                
+                const btn = document.getElementById('historyBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Restored`;
+                setTimeout(() => btn.innerHTML = originalText, 1500);
+            }
+        }
+
+        // --- Rendering ---
+
+        function renderPrompts(data = prompts) {
+            let displayData = data;
+            if (activeCategory !== 'All') {
+                displayData = displayData.filter(p => (p.category || 'Image') === activeCategory);
+            }
+
+            const grid = document.getElementById('grid');
+            const emptyState = document.getElementById('emptyState');
+            
+            grid.innerHTML = '';
+
+            if (displayData.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+                grid.classList.remove('hidden');
+
+                displayData.forEach((prompt, index) => {
+                    const card = document.createElement('div');
+                    card.style.animation = `fadeIn 0.6s ease-out ${index * 0.05}s backwards`;
+                    card.className = 'prompt-card glass-card rounded-3xl p-6 flex flex-col h-full group relative overflow-hidden';
+                    
+                    const tagsHtml = prompt.tags.map(tag => 
+                        `<span class="inline-block bg-black/5 dark:bg-white/5 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md mr-2 mb-2 border border-black/5 dark:border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 transition-colors cursor-default">#${tag}</span>`
+                    ).join('');
+                    
+                    const defCat = DEFAULT_CATEGORIES.find(c => c.id === (prompt.category || 'Image'));
+                    const iconClass = defCat ? defCat.icon : 'fa-tag';
+
+                    const statusBadge = prompt.status === 'Final'
+                        ? `<span class="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-500/20 flex items-center gap-1 shadow-sm dark:shadow-[0_0_10px_rgba(16,185,129,0.1)]"><i class="fa-solid fa-check"></i> FINAL</span>`
+                        : `<span class="bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-500/20 flex items-center gap-1"><i class="fa-solid fa-pen-ruler"></i> WIP</span>`;
+
+                    const gptLinkHtml = prompt.gptLink ? 
+                        `<a href="${prompt.gptLink}" target="_blank" class="w-10 h-10 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-800 dark:hover:text-white transition-all shadow-sm group/link hover:border-emerald-500/30" title="Open GPT Link">
+                            <i class="fa-solid fa-arrow-up-right-from-square group-hover/link:scale-110 transition-transform"></i>
+                         </a>` : '';
+
+                    card.innerHTML = `
+                        <div class="absolute top-4 right-4 flex gap-1 opacity-0 lg:group-hover:opacity-100 transition-all z-20">
+                            <button onclick="editPrompt('${prompt.id}')" class="w-8 h-8 rounded-lg bg-white/80 dark:bg-emerald-600/20 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500 hover:text-white transition-colors flex items-center justify-center shadow-sm backdrop-blur-md" title="Edit">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
+                            <button onclick="confirmDelete('${prompt.id}')" class="w-8 h-8 rounded-lg bg-white/80 dark:bg-emerald-600/20 text-emerald-600 dark:text-emerald-300 hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center shadow-sm backdrop-blur-md" title="Delete">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+
+                        <div class="mb-5 pr-16 relative">
+                            <div class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-r-full"></div>
+                            
+                            <div class="flex items-center gap-2 mb-3 flex-wrap">
+                                <span class="bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-black/5 dark:border-white/10 flex items-center gap-1">
+                                    <i class="fa-solid ${iconClass}"></i> ${prompt.category || 'Image'}
+                                </span>
+                                ${statusBadge}
+                            </div>
+                            <h3 class="font-bold text-xl text-gray-900 dark:text-white truncate drop-shadow-sm" title="${prompt.title}">${prompt.title}</h3>
+                            <div class="text-[11px] text-gray-500 mt-1 font-mono">
+                                ${new Date(prompt.createdAt).toLocaleDateString()}
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white/50 dark:bg-black/30 rounded-xl p-4 mb-4 flex-grow border border-black/5 dark:border-white/5 group-hover:border-emerald-500/20 transition-colors shadow-inner relative overflow-hidden">
+                             <!-- subtle shine inside textarea -->
+                             <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/30 dark:from-white/5 to-transparent pointer-events-none"></div>
+                            <p class="text-gray-700 dark:text-gray-300 text-sm font-mono leading-relaxed line-clamp-3 relative z-10" id="text-${prompt.id}">${escapeHtml(prompt.text)}</p>
+                        </div>
+
+                        <div class="mb-5 flex flex-wrap">
+                            ${tagsHtml}
+                        </div>
+
+                        <div class="mt-auto pt-2 flex gap-3">
+                            <button onclick="copyToClipboard('${escapeJs(prompt.text)}')" 
+                                class="flex-grow bg-white/50 dark:bg-white/5 hover:bg-emerald-600 hover:border-emerald-500 text-gray-700 dark:text-gray-300 hover:text-white border border-black/10 dark:border-white/10 text-sm font-semibold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 group/copy">
+                                <i class="fa-regular fa-copy group-hover/copy:animate-bounce"></i> <span>Copy</span>
+                            </button>
+                            ${gptLinkHtml}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+            updateStats();
+        }
+
+        function savePrompt(e) {
+            e.preventDefault();
+            const id = document.getElementById('promptId').value;
+            const title = document.getElementById('titleInput').value.trim();
+            const text = document.getElementById('promptInput').value.trim();
+            const gptLink = document.getElementById('gptLinkInput').value.trim();
+            const tagsStr = document.getElementById('tagsInput').value;
+            const status = document.getElementById('statusInput').value;
+            
+            let category;
+            const selectVal = document.getElementById('categorySelect').value;
+            if (selectVal === '__NEW__') {
+                category = document.getElementById('customCategoryInput').value.trim() || 'Custom';
+            } else {
+                category = selectVal;
+            }
+            
+            const tags = tagsStr.split(',')
+                .map(t => t.trim())
+                .filter(t => t.length > 0);
+
+            if (id) {
+                const index = prompts.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    const existing = prompts[index];
+                    let history = existing.history || [];
+                    
+                    if (existing.text !== text) {
+                        history.unshift({
+                            text: existing.text,
+                            timestamp: Date.now()
+                        });
+                        if (history.length > 10) history.pop();
+                    }
+
+                    prompts[index] = { 
+                        ...existing, 
+                        title, 
+                        text, 
+                        gptLink, 
+                        tags, 
+                        category, 
+                        status, 
+                        history, 
+                        updatedAt: Date.now() 
+                    };
+                }
+            } else {
+                const newPrompt = {
+                    id: crypto.randomUUID(),
+                    title: title || 'Untitled Seed',
+                    text,
+                    gptLink,
+                    tags,
+                    category,
+                    status,
+                    history: [], 
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                prompts.unshift(newPrompt);
+            }
+
+            saveData();
+            
+            if (isFocusMode) {
+                 toggleFocusMode(); 
+            }
+            
+            closeModal();
+            document.getElementById('searchInput').value = '';
+            document.getElementById('mobileSearchInput').value = '';
+            
+            if (activeCategory !== 'All' && activeCategory !== category) {
+                setFilterCategory(category);
+            } else {
+                renderPrompts();
+            }
+            
+            showToast('Seed Planted Successfully!');
+        }
+
+        function filterPrompts(query) {
+            query = query.toLowerCase();
+            const filtered = prompts.filter(p => {
+                const inTitle = p.title.toLowerCase().includes(query);
+                const inText = p.text.toLowerCase().includes(query);
+                const inTags = p.tags.some(t => t.toLowerCase().includes(query));
+                return inTitle || inText || inTags;
+            });
+            renderPrompts(filtered);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                } catch (err) {
+                    console.error('Fallback failed', err);
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // --- Export CSV & JSON ---
+        function convertToCSV(objArray) {
+            const array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+            let str = '';
+            const headers = ["id", "title", "text", "tags", "category", "status", "gptLink", "createdAt", "updatedAt"];
+            
+            // Header row
+            str += headers.join(',') + '\r\n';
+
+            for (let i = 0; i < array.length; i++) {
+                let line = '';
+                for (let index in headers) {
+                    if (line != '') line += ','
+                    
+                    let head = headers[index];
+                    let value = array[i][head];
+
+                    // Join tags with pipe |
+                    if(Array.isArray(value)) value = value.join('|'); 
+                    
+                    // Handle null/undefined
+                    if(value === undefined || value === null) value = "";
+                    
+                    // Convert to string and escape quotes
+                    value = value.toString().replace(/"/g, '""');
+                    
+                    // Wrap value in quotes
+                    line += '"' + value + '"';
+                }
+                str += line + '\r\n';
+            }
+            return str;
+        }
+
+        function exportData(type = 'json') {
+            if (prompts.length === 0) {
+                showToast("Nothing to export!", true);
+                return;
+            }
+            
+            let dataStr = '';
+            let exportName = `prompt_garden_${new Date().toISOString().slice(0,10)}`;
+            let mimeType = '';
+
+            if(type === 'csv') {
+                dataStr = convertToCSV(prompts);
+                mimeType = 'text/csv;charset=utf-8;';
+                exportName += '.csv';
+            } else {
+                dataStr = JSON.stringify(prompts, null, 2);
+                mimeType = 'application/json;charset=utf-8;';
+                exportName += '.json';
+            }
+
+            const dataUri = 'data:' + mimeType + ',' + encodeURIComponent(dataStr);
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportName);
+            linkElement.click();
+            showToast(`Garden exported as ${type.toUpperCase()}!`);
+        }
+
+        // --- Import CSV & JSON ---
+        function parseCSV(text) {
+            // Robust CSV parser to handle quotes and newlines
+            const arr = [];
+            let quote = false;  // 'true' means we're inside a quoted field
+            let col = 0, c = 0;
+            let data = [''];
+
+            for (; c < text.length; c++) {
+                let cc = text[c], nc = text[c+1];
+                arr[col] = arr[col] || [];
+                arr[col][data.length - 1] = data[data.length - 1] || "";
+
+                if (cc == '"' && quote && nc == '"') { data[data.length - 1] += cc; ++c; continue; }
+                if (cc == '"') { quote = !quote; continue; }
+                if (cc == ',' && !quote) { ++data.length; data[data.length - 1] = ''; continue; }
+                if (cc == '\r' && nc == '\n' && !quote) { ++col; data = ['']; ++c; continue; }
+                if (cc == '\n' && !quote) { ++col; data = ['']; continue; }
+                if (cc == '\r' && !quote) { ++col; data = ['']; continue; }
+
+                data[data.length - 1] += cc;
+            }
+            arr.push(data); // Push last row
+            
+            // Convert array of arrays to array of objects
+            const headers = arr[0];
+            const result = [];
+            
+            for(let i = 1; i < arr.length; i++) {
+                const row = arr[i];
+                if(row.length < headers.length) continue; // Skip empty rows
+                
+                const obj = {};
+                for(let j = 0; j < headers.length; j++) {
+                    let val = row[j];
+                    if(headers[j] === 'tags') val = val ? val.split('|') : [];
+                    else if(headers[j] === 'createdAt' || headers[j] === 'updatedAt') val = Number(val) || Date.now();
+                    
+                    obj[headers[j]] = val;
+                }
+                if(obj.id) result.push(obj);
+            }
+            return result;
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let json = [];
+                    if(file.name.endsWith('.csv')) {
+                        json = parseCSV(e.target.result);
+                    } else {
+                        json = JSON.parse(e.target.result);
+                    }
+
+                    if (Array.isArray(json)) {
+                        if(confirm("Merge with existing garden? (Cancel to Replace)")) {
+                             json.forEach(newItem => {
+                                 if(!prompts.some(existing => existing.id === newItem.id)) {
+                                     if (!newItem.category) newItem.category = 'Image';
+                                     prompts.push(newItem);
+                                 }
+                             });
+                             prompts.sort((a, b) => b.createdAt - a.createdAt);
+                        } else {
+                            prompts = json.map(p => ({...p, category: p.category || 'Image'}));
+                        }
+                        saveData();
+                        renderCategoryFilters(); 
+                        renderPrompts();
+                        showToast("Garden updated!");
+                    } else {
+                        alert("Invalid file format.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Error parsing file.");
+                }
+                input.value = ''; 
+            };
+            reader.readAsText(file);
+        }
+
+        function openModal() {
+            document.getElementById('promptForm').reset();
+            document.getElementById('promptId').value = '';
+            document.getElementById('modalTitle').textContent = 'Plant New Prompt';
+            document.getElementById('historyBtn').classList.add('hidden'); 
+            document.getElementById('historyPanel').classList.add('hidden');
+            
+            cancelCustomCategory();
+            populateModalCategorySelect('Image');
+            setModalStatus('WIP');
+            
+            if (isFocusMode) toggleFocusMode();
+
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            });
+            
+            document.getElementById('titleInput').focus();
+        }
+
+        function editPrompt(id) {
+            const prompt = prompts.find(p => p.id === id);
+            if (!prompt) return;
+
+            openModal();
+            
+            cancelCustomCategory();
+            document.getElementById('modalTitle').textContent = 'Prune/Edit Prompt';
+            document.getElementById('promptId').value = prompt.id;
+            document.getElementById('titleInput').value = prompt.title;
+            document.getElementById('promptInput').value = prompt.text;
+            document.getElementById('gptLinkInput').value = prompt.gptLink || '';
+            document.getElementById('tagsInput').value = prompt.tags.join(', ');
+            
+            document.getElementById('historyBtn').classList.remove('hidden');
+            renderHistory(prompt.history);
+
+            populateModalCategorySelect(prompt.category || 'Image');
+            setModalStatus(prompt.status || 'WIP');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            document.getElementById('historyPanel').classList.add('hidden');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function confirmDelete(id) {
+            deleteTargetId = id;
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            deleteTargetId = null;
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.getElementById('deleteModal').classList.remove('flex');
+        }
+
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            if (deleteTargetId) {
+                prompts = prompts.filter(p => p.id !== deleteTargetId);
+                saveData();
+                renderPrompts();
+                closeDeleteModal();
+                showToast("Weed removed.");
+            }
+        };
+
+        function showToast(message = "Copied to Clipboard!", isError = false) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = isError ? `<i class="fa-solid fa-circle-exclamation mr-2"></i> ${message}` : `<i class="fa-solid fa-check-circle mr-2"></i> ${message}`;
+            toast.className = `fixed bottom-10 left-1/2 z-50 flex items-center gap-3 px-6 py-3 rounded-full text-white shadow-2xl font-medium text-sm transition-all transform -translate-x-1/2 translate-y-0 opacity-100 border border-white/20 backdrop-blur-md`;
+            toast.style.backgroundColor = isError ? 'rgba(239, 68, 68, 0.8)' : 'rgba(16, 185, 129, 0.8)';
+            
+            // Re-trigger animation
+            toast.classList.remove('show');
+            void toast.offsetWidth; 
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.classList.add('translate-y-10', 'opacity-0');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+        
+        function escapeJs(text) {
+            if (!text) return "";
+             return text.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('modal')) closeModal();
+            if (event.target == document.getElementById('deleteModal')) closeDeleteModal();
+            
+            if (!event.target.closest('#settingsBtn') && !event.target.closest('#settingsMenu')) {
+                const menu = document.getElementById('settingsMenu');
+                if (menu && !menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
+                }
+            }
+        }
+    </script>
+    
+    <script>window.va=window.va||function(){(window.va.q=window.va.q||[]).push(arguments)};</script><script src="/_vercel/insights/script.js"></script>
+	<script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments)};</script><script src="/_vercel/speed-insights/script.js"></script>	
+    
+</body>
+</html>
