@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PromptGarden | Fast UI</title>
-    <meta name="description" content="Organize, store, and grow your AI image prompts in a beautiful garden-themed library. Features versioning, tagging, and one-click copying.">
-    
+    <title>PromptGarden</title>
+    <meta name="description" content="Organize, store, and grow your AI prompts in a beautiful garden-themed library. Features versioning, tagging, and one-click copying.">
+
+    <!-- Apple & Favicon Icons -->
+    <link rel="apple-touch-icon" href="pg.png">
+    <link rel="icon" type="image/png" href="pg.png">
+        
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://app.aimaverick.me/">
-    <meta property="og:title" content="PromptGarden | AI Image Prompt Library">
-    <meta property="og:description" content="Organize, store, and grow your AI image prompts in a beautiful garden-themed library.">
-    <meta property="og:image" content="pg_og.png">
+    <meta property="og:url" content="https://pgarden.aimaverick.me/">
+    <meta property="og:title" content="PromptGarden | AI Prompt Library">
+    <meta property="og:description" content="Organize, store, and grow your AI prompts in a beautiful garden-themed library.">
+    <meta property="og:image" content="https://pgarden.aimaverick.me/pg_og.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://app.aimaverick.me/">
-    <meta property="twitter:title" content="PromptGarden | AI Image Prompt Library">
-    <meta property="twitter:description" content="Organize, store, and grow your AI image prompts in a beautiful garden-themed library.">
-    <meta property="twitter:image" content="pg_og.png">
+    <meta property="twitter:url" content="https://pgarden.aimaverick.me/">
+    <meta property="twitter:title" content="PromptGarden | AI Prompt Library">
+    <meta property="twitter:description" content="Organize, store, and grow your AI prompts in a beautiful garden-themed library.">
+    <meta property="twitter:image" content="https://pgarden.aimaverick.me/pg_og.png">
     
     <!-- Tailwind CSS with Dark Mode Configuration -->
     <script src="cdn.tailwindcss.com"></script>
@@ -142,7 +146,7 @@
         body { 
             /* Light Mode Default */
             background-color: rgb(var(--primary-50));
-            color: #1e293b; /* Slate-800 for high contrast text */
+            color: #1a202c; /* Ensure darker text for better contrast */
             /* Static gradient overlay for Light Mode */
             background-image: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.8), transparent 70%);
             background-attachment: fixed;
@@ -214,9 +218,9 @@
         /* Glass Input */
         .glass-input {
             background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.1); 
+            border: 1px solid rgba(0, 0, 0, 0.1); /* Darker border for light mode */
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
-            color: #1a202c; /* Slate-900 for Light Mode readability */
+            color: #1a202c; /* Very dark gray for Light Mode readability */
             font-weight: 500;
         }
         html.dark .glass-input {
@@ -230,48 +234,27 @@
             background: rgba(255, 255, 255, 0.95);
             border-color: rgba(var(--primary-500) / 0.8);
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03), 0 0 0 2px rgba(var(--primary-500) / 0.2);
-            color: #0f172a; /* Force dark text on focus */
         }
         html.dark .glass-input:focus {
             background: rgba(0, 0, 0, 0.5);
             border-color: rgba(var(--primary-400) / 0.6);
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(var(--primary-500) / 0.2);
-            color: #ffffff;
         }
         
-        .glass-input::placeholder { color: #64748b; opacity: 0.8; }
+        .glass-input::placeholder { color: #475569; opacity: 0.7; }
         html.dark .glass-input::placeholder { color: #94a3b8; opacity: 1; }
 
-        /* Liquid Button - Modified for Light Mode Visibility */
+        /* Liquid Button */
         .btn-liquid {
             position: relative;
             overflow: hidden;
-            /* Default Dark Mode Gradient */
             background: linear-gradient(135deg, rgb(var(--primary-600)) 0%, rgb(var(--teal-600)) 100%);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 4px 15px rgba(var(--primary-500) / 0.4);
             z-index: 1;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            color: #ffffff; /* Explicitly white text */
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            /* Dark Mode Text */
-            color: #ffffff;
-        }
-
-        /* Light Mode Override for Button - High Contrast */
-        html:not(.dark) .btn-liquid {
-            background: white; /* Clean white background */
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: rgb(var(--primary-700)); /* Dark Green Text */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            text-shadow: none;
-        }
-        html:not(.dark) .btn-liquid::before {
-            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
-        }
-        html:not(.dark) .btn-liquid:hover {
-            border-color: rgb(var(--primary-500));
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            background: rgb(var(--primary-50));
         }
 
         .btn-liquid::before {
@@ -348,6 +331,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             color: white;
+            z-index: 100;
         }
         html.dark #toast {
             background: rgba(var(--primary-900) / 0.95) !important; 
@@ -372,7 +356,7 @@
             position: fixed;
             inset: 0;
             width: 100vw;
-            height: 100vh;
+            height: 100dvh; /* dvh for mobile */
             max-width: none;
             max-height: none;
             border-radius: 0;
@@ -427,13 +411,13 @@
 
     <!-- Header -->
     <header class="glass sticky top-0 z-40 transition-colors duration-500 ease-in-out">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <img src="pg.png" onerror="this.src='https://placehold.co/68x68/10b981/ffffff?text=PG'" alt="PromptGarden Logo" class="w-[60px] h-[60px] rounded-2xl shadow-lg object-cover ring-1 ring-black/5 dark:ring-white/20 transform hover:scale-105 transition-transform duration-300">
-                <h1 class="text-2xl font-bold tracking-tight drop-shadow-sm dark:drop-shadow-lg text-slate-900 dark:text-white">Prompt<span class="text-gradient">Garden</span></h1>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-4 overflow-hidden">
+                <img src="pg.png" onerror="this.src='https://placehold.co/68x68/10b981/ffffff?text=PG'" alt="PromptGarden Logo" class="w-10 h-10 sm:w-[60px] sm:h-[60px] rounded-xl sm:rounded-2xl shadow-lg object-cover ring-1 ring-black/5 dark:ring-white/20 transform hover:scale-105 transition-transform duration-300">
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight drop-shadow-sm dark:drop-shadow-lg text-slate-900 dark:text-white truncate">Prompt<span class="text-gradient">Garden</span></h1>
             </div>
 
-            <div class="flex items-center gap-3 sm:gap-4">
+            <div class="flex items-center gap-2 sm:gap-4 shrink-0">
                 <!-- Search (Desktop) -->
                 <div class="relative hidden md:block group">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-emerald-400/70 group-focus-within:text-emerald-600 dark:group-focus-within:text-emerald-500 transition-colors"></i>
@@ -441,18 +425,18 @@
                         class="glass-input text-sm rounded-xl block w-64 pl-10 p-2.5 transition-all outline-none">
                 </div>
                 
-                <!-- New Prompt Button -->
+                <!-- New Prompt Button (Desktop) -->
                 <button onclick="openModal()" class="hidden sm:flex btn-liquid text-white font-semibold rounded-xl text-sm px-6 py-2.5 items-center gap-2">
                     <i class="fa-solid fa-plus"></i> <span>Plant New</span>
                 </button>
                 
-                <!-- Mobile New Button -->
-                <button onclick="openModal()" class="sm:hidden w-10 h-10 rounded-xl btn-liquid text-white flex items-center justify-center">
-                    <i class="fa-solid fa-plus"></i>
+                <!-- Mobile New Button (Larger Touch Target) -->
+                <button onclick="openModal()" class="sm:hidden w-11 h-11 rounded-xl btn-liquid text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+                    <i class="fa-solid fa-plus text-lg"></i>
                 </button>
 
                 <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-indigo-300 transition-colors flex items-center justify-center border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-md" title="Toggle Theme">
+                <button onclick="toggleTheme()" class="w-11 h-11 sm:w-10 sm:h-10 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-indigo-300 transition-colors flex items-center justify-center border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-md active:scale-95" title="Toggle Theme">
                     <i class="fa-solid fa-moon hidden dark:block text-indigo-300"></i>
                     <!-- Custom SVG Sun Icon for Light Mode -->
                     <svg class="w-6 h-6 text-amber-500 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -462,7 +446,7 @@
 
                 <!-- Settings Dropdown -->
                 <div class="relative">
-                    <button id="settingsBtn" onclick="toggleSettings()" class="w-10 h-10 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors flex items-center justify-center border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-md">
+                    <button id="settingsBtn" onclick="toggleSettings()" class="w-11 h-11 sm:w-10 sm:h-10 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors flex items-center justify-center border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-md active:scale-95">
                         <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
                     </button>
                     <!-- Dropdown -->
@@ -508,7 +492,7 @@
         <!-- Stats Bar -->
         <div class="flex flex-col sm:flex-row justify-between items-end sm:items-center mb-6 gap-4">
             <div>
-                <h2 class="text-3xl font-bold mb-1 tracking-tight text-slate-800 dark:text-white drop-shadow-sm dark:drop-shadow-md">Your Garden</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold mb-1 tracking-tight text-slate-800 dark:text-white drop-shadow-sm dark:drop-shadow-md">Your Garden</h2>
                 <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 font-medium">
                     <span class="bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-md font-mono text-xs shadow-sm dark:shadow-[0_0_10px_rgba(16,185,129,0.2)]" id="promptCount">0</span>
                     <span class="text-gray-600 dark:text-gray-400">Seeds Planted</span>
@@ -516,11 +500,11 @@
             </div>
             
             <!-- Mobile Search -->
-            <div class="w-full sm:hidden">
+            <div class="w-full sm:hidden mt-2">
                 <div class="relative">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
                     <input type="text" id="mobileSearchInput" placeholder="Search prompts..." 
-                        class="glass-input text-sm rounded-xl block w-full pl-10 p-3 text-gray-900 dark:text-white placeholder-gray-500 transition-all outline-none">
+                        class="glass-input text-base rounded-xl block w-full pl-10 p-3 text-gray-900 dark:text-white placeholder-gray-500 transition-all outline-none">
                 </div>
             </div>
         </div>
@@ -553,10 +537,12 @@
     </footer>
 
     <!-- Add/Edit Modal -->
-    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 transition-opacity opacity-0">
+    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-2 sm:p-4 transition-opacity opacity-0">
         <div class="absolute inset-0 bg-black/30 dark:bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="glass-card bg-white dark:bg-emerald-900 rounded-3xl shadow-2xl w-full max-w-3xl h-[85vh] max-h-[800px] transform transition-all scale-95 relative z-10 flex flex-col transition-all duration-300 border-white/40 dark:border-white/10" id="modalContent">
-            <div class="flex justify-between items-center px-6 py-4 border-b border-black/5 dark:border-white/10 shrink-0">
+        <!-- Modal Content: Updated for Mobile -->
+        <div class="glass-card bg-white dark:bg-emerald-900 rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl h-[85dvh] max-h-[800px] transform transition-all scale-95 relative z-10 flex flex-col transition-all duration-300 border-white/40 dark:border-white/10" id="modalContent">
+            
+            <div class="flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-black/5 dark:border-white/10 shrink-0">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white drop-shadow-sm" id="modalTitle">Plant New Prompt</h3>
                 <div class="flex items-center gap-2">
                     <button type="button" onclick="toggleFocusMode()" class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-white transition-colors flex items-center justify-center border border-black/5 dark:border-white/5" title="Toggle Focus Mode">
@@ -568,36 +554,43 @@
                 </div>
             </div>
             
-            <form id="promptForm" onsubmit="savePrompt(event)" class="flex flex-col flex-grow p-6 gap-5 overflow-hidden">
+            <form id="promptForm" onsubmit="savePrompt(event)" class="flex flex-col flex-grow p-4 sm:p-6 gap-3 sm:gap-5 overflow-hidden">
                 <input type="hidden" id="promptId">
-                <div class="flex flex-col sm:flex-row gap-4 shrink-0 focus-hidden">
-                    <div class="flex-grow">
+                
+                <!-- Top Row Input Group -->
+                <div class="flex flex-col gap-3 shrink-0 focus-hidden">
+                    <!-- Title Full Width -->
+                    <div class="w-full">
                         <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Title</label>
                         <input type="text" id="titleInput" required placeholder="e.g. Secret Garden" 
-                            class="glass-input w-full rounded-xl p-3 focus:outline-none transition-all placeholder-gray-500 text-sm font-semibold">
+                            class="glass-input w-full rounded-xl p-3 focus:outline-none transition-all placeholder-gray-500 text-base sm:text-sm font-semibold">
                     </div>
-                    <div class="min-w-[150px]">
-                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Status</label>
-                        <div class="flex glass-input rounded-xl p-1 h-[46px]">
-                            <button type="button" onclick="setModalStatus('WIP')" id="btnWIP" class="flex-1 rounded-lg text-xs font-bold transition-all text-amber-600 bg-white/50 dark:bg-white/10 shadow-sm border border-amber-500/30">WIP</button>
-                            <button type="button" onclick="setModalStatus('Final')" id="btnFinal" class="flex-1 rounded-lg text-xs font-bold transition-all text-gray-500 dark:text-gray-500 hover:text-emerald-700 dark:hover:text-emerald-400">Final</button>
-                        </div>
-                        <input type="hidden" id="statusInput" value="WIP">
-                    </div>
-                    <div class="sm:w-1/3 min-w-[200px]">
-                        <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Category</label>
-                        <div class="relative h-[46px]">
-                            <select id="categorySelect" onchange="handleCategoryChange(this)" 
-                                class="glass-input w-full h-full rounded-xl px-3 text-sm focus:outline-none appearance-none cursor-pointer"></select>
-                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                    
+                    <!-- Status & Category: Split 50/50 on Mobile -->
+                    <div class="flex flex-row gap-3">
+                        <div class="w-1/2 sm:w-auto sm:min-w-[150px]">
+                            <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Status</label>
+                            <div class="flex glass-input rounded-xl p-1 h-[46px]">
+                                <button type="button" onclick="setModalStatus('WIP')" id="btnWIP" class="flex-1 rounded-lg text-xs font-bold transition-all text-amber-600 bg-white/50 dark:bg-white/10 shadow-sm border border-amber-500/30">WIP</button>
+                                <button type="button" onclick="setModalStatus('Final')" id="btnFinal" class="flex-1 rounded-lg text-xs font-bold transition-all text-gray-500 dark:text-gray-500 hover:text-emerald-700 dark:hover:text-emerald-400">Final</button>
                             </div>
-                            <div id="customCategoryContainer" class="hidden absolute inset-0 flex gap-1">
-                                <input type="text" id="customCategoryInput" placeholder="New Category..." 
-                                    class="glass-input flex-grow rounded-xl px-3 text-sm focus:outline-none">
-                                <button type="button" onclick="cancelCustomCategory()" class="px-2 text-gray-500 hover:text-red-500 transition-colors">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
+                            <input type="hidden" id="statusInput" value="WIP">
+                        </div>
+                        <div class="w-1/2 sm:w-1/3 sm:flex-grow relative h-[46px]">
+                             <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Category</label>
+                            <div class="relative h-[46px] w-full">
+                                <select id="categorySelect" onchange="handleCategoryChange(this)" 
+                                    class="glass-input w-full h-full rounded-xl px-3 text-base sm:text-sm focus:outline-none appearance-none cursor-pointer"></select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </div>
+                                <div id="customCategoryContainer" class="hidden absolute inset-0 flex gap-1">
+                                    <input type="text" id="customCategoryInput" placeholder="New Category..." 
+                                        class="glass-input flex-grow rounded-xl px-3 text-base sm:text-sm focus:outline-none">
+                                    <button type="button" onclick="cancelCustomCategory()" class="px-2 text-gray-500 hover:text-red-500 transition-colors">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -612,16 +605,16 @@
                     </div>
                     <div id="historyPanel" class="hidden absolute top-7 left-0 right-0 z-20 bg-white/95 dark:bg-emerald-950/95 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto space-y-2"></div>
                     <textarea id="promptInput" required placeholder="Enter your detailed image generation prompt here..." 
-                        class="glass-input flex-grow w-full rounded-xl p-4 mono text-sm focus:outline-none transition-all resize-none leading-relaxed text-slate-900 dark:text-slate-100 placeholder-gray-500"></textarea>
+                        class="glass-input flex-grow w-full rounded-xl p-4 mono text-base sm:text-sm focus:outline-none transition-all resize-none leading-relaxed text-slate-900 dark:text-slate-100 placeholder-gray-500"></textarea>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0 focus-hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 shrink-0 focus-hidden">
                     <div>
                         <label class="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400/80 mb-1 uppercase tracking-wider">Tags</label>
                         <div class="relative">
                             <i class="fa-solid fa-hashtag absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-600/50 text-xs"></i>
                             <input type="text" id="tagsInput" placeholder="nature, 8k..." 
-                                class="glass-input w-full rounded-xl pl-8 p-3 text-sm focus:outline-none">
+                                class="glass-input w-full rounded-xl pl-8 p-3 text-base sm:text-sm focus:outline-none">
                         </div>
                     </div>
                     <div>
@@ -629,7 +622,7 @@
                         <div class="relative">
                             <i class="fa-solid fa-link absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-600/50 text-xs"></i>
                             <input type="url" id="gptLinkInput" placeholder="https://..." 
-                                class="glass-input w-full rounded-xl pl-8 p-3 text-sm focus:outline-none">
+                                class="glass-input w-full rounded-xl pl-8 p-3 text-base sm:text-sm focus:outline-none">
                         </div>
                     </div>
                 </div>
@@ -1419,7 +1412,6 @@
             }
         }
     </script>
-    
     <script>window.va=window.va||function(){(window.va.q=window.va.q||[]).push(arguments)};</script><script src="/_vercel/insights/script.js"></script>
 	<script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments)};</script><script src="/_vercel/speed-insights/script.js"></script>	
     
